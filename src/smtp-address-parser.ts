@@ -25,16 +25,16 @@
  *     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *     SOFTWARE.
+ *
+ * It has been modified to have proper imports.
  */
 
-// @ts-expect-error: nearley.js has no types
 import * as rawNearley from './nearley.js';
 
-import type * as Nearley from 'nearley';
 import {type RequireExactlyOne} from 'type-fest';
 import myGrammar from './grammar.js';
 
-const {Grammar, Parser} = rawNearley as typeof Nearley;
+const {Grammar, Parser} = rawNearley;
 
 myGrammar.ParserStart = 'Mailbox';
 const grammar = Grammar.fromCompiled(myGrammar);
@@ -63,7 +63,7 @@ export function parse(address: string): ParseOutput {
     const parser = new Parser(grammar);
     parser.feed(address);
 
-    if (parser.results.length !== 1) {
+    if (parser.results!.length !== 1) {
         throw new Error('address parsing failed: ambiguous grammar');
     }
 
@@ -91,7 +91,7 @@ export function parse(address: string): ParseOutput {
             throw new Error('domain label too long');
         }
     }
-    return parser.results[0];
+    return parser.results![0];
 }
 
 /** Strip +something, strip '.'s, and map to lower case. */
